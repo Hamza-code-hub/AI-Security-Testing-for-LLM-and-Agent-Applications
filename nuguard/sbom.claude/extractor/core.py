@@ -167,8 +167,11 @@ class AiSbomExtractor:
 
         # Walk all files
         python_files: list[Path] = []
+        ts_files: list[Path] = []
         iac_files: list[Path] = []
         dep_files: list[Path] = []
+
+        _TS_SUFFIXES = frozenset({".ts", ".tsx", ".js", ".jsx"})
 
         for file_path in path.rglob("*"):
             if not file_path.is_file():
@@ -178,6 +181,8 @@ class AiSbomExtractor:
                 continue
             if file_path.suffix == ".py":
                 python_files.append(file_path)
+            elif file_path.suffix in _TS_SUFFIXES:
+                ts_files.append(file_path)
             if config.include_iac and _is_iac(rel):
                 iac_files.append(file_path)
             if config.include_deps and file_path.name in _DEP_FILES:
@@ -202,16 +207,49 @@ class AiSbomExtractor:
         from nuguard.sbom.extractor.framework_adapters.mcp import McpAdapter
         from nuguard.sbom.extractor.framework_adapters.fastapi import FastApiAdapter
         from nuguard.sbom.extractor.framework_adapters.flask import FlaskAdapter
+        from nuguard.sbom.extractor.framework_adapters.langgraph import LangGraphAdapter
+        from nuguard.sbom.extractor.framework_adapters.openai_agents import OpenAIAgentsAdapter
+        from nuguard.sbom.extractor.framework_adapters.llm_clients import LLMClientsAdapter
+        from nuguard.sbom.extractor.framework_adapters.llama_index import LlamaIndexAdapter
+        from nuguard.sbom.extractor.framework_adapters.semantic_kernel import SemanticKernelAdapter
+        from nuguard.sbom.extractor.framework_adapters.guardrails_ai import GuardrailsAIAdapter
+        from nuguard.sbom.extractor.framework_adapters.agno import AgnoAdapter
+        from nuguard.sbom.extractor.framework_adapters.google_adk import GoogleADKAdapter
+        from nuguard.sbom.extractor.framework_adapters.azure_ai_agents import AzureAIAgentsAdapter
+        from nuguard.sbom.extractor.framework_adapters.bedrock_agentcore import BedrockAgentCoreAdapter
+        from nuguard.sbom.extractor.framework_adapters.generic import (
+            ModelGenericAdapter,
+            DatastoreGenericAdapter,
+            AuthGenericAdapter,
+            PrivilegeAdapter,
+            ToolGenericAdapter,
+        )
         from nuguard.sbom.extractor.prompt_detector import PromptDetector
 
         adapters: list[FrameworkAdapter] = [
             LangChainAdapter(),
+            LangGraphAdapter(),
+            OpenAIAgentsAdapter(),
+            LLMClientsAdapter(),
+            LlamaIndexAdapter(),
+            SemanticKernelAdapter(),
+            GuardrailsAIAdapter(),
+            AgnoAdapter(),
+            GoogleADKAdapter(),
+            AzureAIAgentsAdapter(),
+            BedrockAgentCoreAdapter(),
             OpenAIFunctionsAdapter(),
             CrewAIAdapter(),
             AutoGenAdapter(),
             McpAdapter(),
             FastApiAdapter(),
             FlaskAdapter(),
+            # Generic fallbacks (lower confidence, run last):
+            ModelGenericAdapter(),
+            DatastoreGenericAdapter(),
+            AuthGenericAdapter(),
+            PrivilegeAdapter(),
+            ToolGenericAdapter(),
         ]
 
         prompt_detector = PromptDetector()
@@ -241,6 +279,10 @@ class AiSbomExtractor:
             for node in prompt_nodes:
                 if node.confidence >= config.min_confidence:
                     accumulator.add(node)
+
+        # TypeScript/JavaScript file scanning
+        _log.debug("Found %d TS/JS files", len(ts_files))
+        self._scan_typescript_files(ts_files, config, accumulator, all_edges)
 
         # PII classification
         pii_files = python_files + [
@@ -391,6 +433,57 @@ class AiSbomExtractor:
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
+
+    def _scan_typescript_files(
+        self,
+        ts_files: list[Path],
+        config: "AiSbomConfig",
+        accumulator: _NodeAccumulator,
+        all_edges: list[Edge],
+    ) -> None:
+        """Scan TypeScript/JavaScript files using TS adapters."""
+        if not ts_files:
+            return
+        try:
+            from nuguard.sbom.extractor.ts_parser import TSParser
+            from nuguard.sbom.extractor.ts_adapters.langgraph import LangGraphTSAdapter
+            from nuguard.sbom.extractor.ts_adapters.llm_clients import LLMClientsTSAdapter
+            from nuguard.sbom.extractor.ts_adapters.prompts import PromptsTSAdapter
+            from nuguard.sbom.extractor.ts_adapters.datastores import DatastoresTSAdapter
+            from nuguard.sbom.extractor.ts_adapters.openai_agents import OpenAIAgentsTSAdapter
+        except ImportError as exc:
+            _log.debug("TS adapters not available: %s", exc)
+            return
+
+        parser = TSParser()
+        ts_adapters = [
+            LangGraphTSAdapter(),
+            LLMClientsTSAdapter(),
+            PromptsTSAdapter(),
+            DatastoresTSAdapter(),
+            OpenAIAgentsTSAdapter(),
+        ]
+
+        for f in ts_files:
+            try:
+                source = f.read_text(errors="replace")
+            except OSError:
+                continue
+            try:
+                result = parser.parse(source)
+            except Exception as exc:  # noqa: BLE001
+                _log.debug("TSParser failed on %s: %s", f, exc)
+                continue
+            for adapter in ts_adapters:
+                try:
+                    if adapter.can_handle(result):
+                        nodes, edges = adapter.extract(f, result)
+                        for node in nodes:
+                            if node.confidence >= config.min_confidence:
+                                accumulator.add(node)
+                        all_edges.extend(edges)
+                except Exception as exc:  # noqa: BLE001
+                    _log.debug("TS adapter %s failed on %s: %s", adapter, f, exc)
 
     def _scan_iac(self, path: Path) -> tuple[list[Node], list[Edge], list[str]]:
         """Route IaC file to the appropriate dedicated scanner."""
