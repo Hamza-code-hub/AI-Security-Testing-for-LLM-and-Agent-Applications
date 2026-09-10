@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero-banner.png" alt="NuGuard — AI Security Testing for LLM and Agent Applications" width="100%" />
+  <img src="docs/assets/hero-banner.png" alt="NuGuard — AI Security Testing for LLM and Agent Applications" width="100%" />
 </p>
 
 <h1 align="center">AI Security Testing for LLM & Agent Applications</h1>
