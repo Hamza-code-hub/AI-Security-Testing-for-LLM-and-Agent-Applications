@@ -9,232 +9,309 @@
 </p>
 
 <p align="center">
-  A security engineering project for discovering, analyzing, and adversarially testing modern LLM applications and autonomous AI agents before they reach production.
+  A unified security-testing workflow for discovering the AI attack surface, validating intended behavior, adversarially testing live agents, and producing actionable security findings.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/AI%20Security-LLM%20%26%20Agents-0A66FF?style=for-the-badge" alt="AI Security" />
-  <img src="https://img.shields.io/badge/Red%20Teaming-Automated-E53935?style=for-the-badge" alt="Automated Red Teaming" />
   <img src="https://img.shields.io/badge/AI--SBOM-Supported-00A67E?style=for-the-badge" alt="AI-SBOM" />
+  <img src="https://img.shields.io/badge/Red%20Teaming-100%2B%20Scenarios-E53935?style=for-the-badge" alt="100+ Red Team Scenarios" />
   <img src="https://img.shields.io/badge/Reports-JSON%20%7C%20Markdown%20%7C%20SARIF-6C5CE7?style=for-the-badge" alt="Reports" />
   <img src="https://img.shields.io/badge/License-Apache%202.0-2F3542?style=for-the-badge" alt="Apache 2.0" />
 </p>
 
 <p align="center">
-  <a href="#-project-overview">Overview</a> •
-  <a href="#-why-this-project-exists">Problem</a> •
-  <a href="#-end-to-end-security-workflow">Workflow</a> •
-  <a href="#-security-capabilities">Capabilities</a> •
-  <a href="#-high-level-architecture">Architecture</a> •
-  <a href="#-real-assessment-example">Demo</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-star-interview-strategy">STAR Strategy</a>
+  <a href="#overview">Overview</a> •
+  <a href="#core-capabilities">Capabilities</a> •
+  <a href="#end-to-end-workflow">Workflow</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#security-coverage">Security Coverage</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#assessment-example">Assessment Example</a>
 </p>
 
----
+Overview
 
-## 🚀 Project Overview
+Modern AI applications are more than chat interfaces. They can combine LLMs, autonomous agents, tools, APIs, retrieval systems, application data, and external services. This creates security risks that are difficult to evaluate with conventional code and API scanners alone.
 
-Modern AI applications are no longer isolated chat interfaces. They can use **LLMs, tools, APIs, retrieval systems, external services, application data, and autonomous agent workflows**. That creates a security problem traditional scanners do not fully address: an application can be structurally valid while still behaving unsafely when manipulated through natural language.
+This project addresses that gap with one assessment pipeline that evaluates both:
 
-This project provides an end-to-end security workflow that combines **structural inspection** and **runtime adversarial testing**.
+How the AI application is constructed — its agents, models, tools, endpoints, dependencies, and relationships.
 
-> **Core idea:** understand what the AI system is made of, define what it is supposed to do, test what it actually does, attack it safely, and turn the results into actionable remediation.
+How the AI application behaves — its policies, runtime boundaries, tool usage, responses, and behavior under adversarial pressure.
 
-### What the platform evaluates
+The workflow begins with AI asset discovery and AI-SBOM generation, continues through static analysis and cognitive-policy validation, then tests a running target with behavior checks and 100+ adversarial scenarios. Findings are correlated, mapped to security frameworks, converted into remediation guidance, and exported in formats suitable for engineering and security workflows.
 
-| Layer | Security objective |
-|---|---|
-| 🧩 **AI Asset Discovery** | Identify agents, models, tools, API endpoints, and connected AI components. |
-| 📦 **AI-SBOM** | Build an AI Bill of Materials representing the AI attack surface. |
-| 🔍 **Static Analysis** | Detect structural, configuration, and supply-chain risk without requiring a live target. |
-| 🛡️ **Cognitive Policy** | Define intended application behavior and identify missing or weak enforcement controls. |
-| 🧪 **Behavior Testing** | Validate allowed topics, expected responses, boundaries, and runtime policy behavior. |
-| 🎯 **Red Teaming** | Execute 100+ adversarial scenarios covering prompt injection, tool abuse, data exfiltration, multi-turn manipulation, and more. |
-| 🔗 **Framework Mapping** | Map findings to recognized AI-security categories such as OWASP and MITRE-oriented controls. |
-| 🛠️ **Remediation** | Provide component-focused guidance for discovered weaknesses. |
-| 📄 **Reporting** | Export findings in Text, JSON, Markdown, and SARIF formats. |
+Security objective: discover the AI attack surface, understand intended behavior, validate actual behavior, safely attack the system, and turn evidence into actionable remediation.
 
----
+Why This Project Exists
 
-## 🖼️ Project at a Glance
+Traditional security controls remain essential, but agentic AI introduces a behavioral attack surface where natural language can influence reasoning, tool execution, data access, and application actions.
+
+Common failure modes include:
+
+Prompt injection that attempts to override trusted instructions.
+
+Tool abuse that manipulates an agent into unsafe or unauthorized actions.
+
+Policy bypass where runtime behavior exceeds intended application boundaries.
+
+Sensitive-data exposure through model responses, retrieved context, or tool output.
+
+Multi-turn manipulation that gradually moves the model outside expected behavior.
+
+Control gaps where a documented policy exists but technical enforcement is weak or missing.
+
+Structural and supply-chain risk across AI components and their relationships.
+
+A secure AI assessment therefore needs more than a single scanner. It needs visibility into the system's structure and evidence of how the running application behaves under realistic attack conditions.
+
+Core Capabilities
+
+Capability
+
+Purpose
+
+Result
+
+AI Asset Discovery
+
+Identify agents, models, tools, API endpoints, and connected AI components.
+
+AI attack-surface inventory
+
+AI-SBOM Generation
+
+Build a structured AI Bill of Materials describing application components and relationships.
+
+Machine-readable AI system model
+
+Static Analysis
+
+Evaluate structural and supply-chain risk without requiring a running target.
+
+Static security findings
+
+Cognitive Policy
+
+Define intended behavior and identify missing or weak enforcement controls.
+
+Policy controls and enforcement gaps
+
+Behavior Testing
+
+Validate expected functionality, allowed topics, boundaries, and runtime policy behavior.
+
+Behavioral findings and risk evidence
+
+Automated Red Teaming
+
+Execute 100+ adversarial scenarios against an authorized running target.
+
+Attack findings and risk score
+
+Framework Mapping
+
+Organize findings against recognized AI-security categories such as OWASP and MITRE-oriented controls.
+
+Standardized security context
+
+Finding Correlation
+
+Combine structural, policy, behavioral, and adversarial evidence.
+
+Unified risk view
+
+Remediation
+
+Produce guidance tied to affected application components.
+
+Actionable fixes
+
+Reporting
+
+Export assessment results for humans and automation.
+
+Text, JSON, Markdown, SARIF
+
+Project at a Glance
 
 <p align="center">
-  <img src="docs/project-overview-infographic.png" alt="NuGuard project overview infographic" width="78%" />
+  <img src="docs/assets/project-overview-infographic.png" alt="NuGuard AI security project overview" width="82%" />
 </p>
 
-The visual above summarizes the complete product story: discover the AI application, analyze its structure, validate policy and behavior, launch adversarial tests, identify data leakage or control failures, remediate the affected component, and export results for engineering or security workflows.
+The complete security lifecycle is built around one sequence:
 
----
+DISCOVER → MODEL → ANALYZE → DEFINE POLICY → TEST BEHAVIOR → RED TEAM → CORRELATE → REMEDIATE → REPORT
 
-## 🎯 Why This Project Exists
-
-Traditional security tooling is excellent at finding many code, dependency, API, and infrastructure weaknesses. Agentic AI introduces additional risks because **language becomes an attack interface** and models can influence real actions.
-
-### The security gap
-
-- A user can attempt to override system instructions through **prompt injection**.
-- An agent may call tools or APIs with permissions that exceed what the user should control.
-- Multi-turn conversations can gradually move a model outside its expected policy boundaries.
-- Sensitive information can leak through model responses, retrieved context, or tool outputs.
-- A correct-looking codebase does not guarantee safe runtime behavior.
-- Security decisions depend on **prompts, model behavior, policies, tools, context, data flow, and orchestration**.
-
-### The solution
-
-This project treats AI security as a continuous lifecycle rather than a single scanner:
-
-```text
-DISCOVER → MODEL → ANALYZE → DEFINE POLICY → TEST BEHAVIOR → ATTACK → CORRELATE → REMEDIATE → REPORT
-```
-
-That gives teams visibility into both:
-
-1. **How the AI application is constructed**
-2. **How the AI application behaves under adversarial pressure**
-
----
-
-## 🔄 End-to-End Security Workflow
+End-to-End Workflow
 
 <p align="center">
-  <img src="docs/project-workflow.svg" alt="End-to-end AI security testing workflow" width="100%" />
+  <img src="docs/assets/project-workflow.svg" alt="End-to-end AI security testing workflow" width="100%" />
 </p>
 
-### Stage 01 — Target Initialization
+1. Initialize the Target
 
-Configure the application source, target URL, scan settings, provider configuration, and security profile required for the assessment.
+Define the target application, application source, scan configuration, provider settings, and assessment profile.
 
-### Stage 02 — AI Attack-Surface Discovery
+2. Discover the AI Attack Surface
 
-Identify the parts of the application that can influence AI decisions or actions:
+Identify the components that can influence AI decisions or actions:
 
-- Agents
-- Models / LLMs
-- Tools
-- API endpoints
-- AI-connected application components
-- Relationships between those components
+Agents
 
-### Stage 03 — AI-SBOM Generation
+Models / LLMs
 
-Build a structured inventory of the AI system. The AI-SBOM becomes the common foundation for static analysis, supply-chain inspection, security mapping, and later correlation.
+Tools
 
-### Stage 04 — Cognitive Policy
+API endpoints
 
-Describe the application's **intended behavior**:
+AI-connected application components
 
-- What is the agent allowed to do?
-- What must it refuse?
-- Which tools should be available in each context?
-- Which topics or actions should be restricted?
-- Which controls should enforce those decisions?
+Relationships between those components
 
-### Stage 05 — Static Security Analysis
+3. Generate the AI-SBOM
 
-Analyze the AI-SBOM and application structure to identify structural or supply-chain risk before runtime testing begins.
+Convert discovery results into a structured AI Bill of Materials. The AI-SBOM becomes the common input for structural analysis, supply-chain inspection, framework mapping, and finding correlation.
 
-### Stage 06 — Behavioral Validation
+4. Define Cognitive Policy
 
-Interact with a running target and validate that real behavior matches policy expectations.
+Describe the application's intended behavior and security boundaries:
 
-### Stage 07 — Automated Red Teaming
+What should the agent be allowed to do?
 
-Execute **100+ adversarial scenarios** in a controlled environment, including attacks such as:
+What should it refuse?
 
-- Prompt injection
-- Policy bypass
-- Tool abuse
-- Sensitive-data exfiltration
-- Multi-turn manipulation
-- Context abuse
-- Other scenario-catalog attacks
+Which tools should be available in a given context?
 
-### Stage 08 — Finding Correlation
+Which topics or actions should be restricted?
 
-Bring structural, policy, behavior, and red-team findings together so a security team can understand the complete risk rather than isolated scanner output.
+Which controls should enforce those decisions?
 
-### Stage 09 — Remediation & Reporting
+5. Run Static Analysis
 
-Generate human-readable and machine-readable results that can be used by developers, AppSec teams, red teams, auditors, or CI/CD pipelines.
+Analyze the AI-SBOM and application structure for structural and supply-chain risk. This stage can run without a live application.
 
----
+6. Validate Runtime Behavior
 
-## 🧪 Security Testing Workflow
+Test a running application to determine whether real behavior remains inside expected functional and policy boundaries.
+
+7. Execute Automated Red Teaming
+
+Run controlled adversarial scenarios such as:
+
+Prompt injection
+
+Policy bypass
+
+Tool abuse
+
+Sensitive-data exfiltration
+
+Multi-turn manipulation
+
+Context abuse
+
+Other scenario-catalog attacks
+
+8. Correlate Findings
+
+Combine evidence from AI-SBOM analysis, policy evaluation, behavior testing, and red-team execution into a unified security view.
+
+9. Remediate and Export
+
+Generate developer-focused remediation guidance and export the resulting assessment in human-readable or machine-readable formats.
+
+Security Testing Pipeline
 
 <p align="center">
-  <img src="docs/security-testing-workflow.svg" alt="AI security testing stages" width="92%" />
+  <img src="docs/assets/security-testing-workflow.svg" alt="AI security testing pipeline" width="94%" />
 </p>
 
-| Phase | Input | What happens | Output |
-|---|---|---|---|
-| **AI-SBOM** | Source / project | Discover AI components and relationships | Structured AI inventory |
-| **Policy** | Intended behavior | Model allowed and prohibited actions | Policy controls and gaps |
-| **Static Analysis** | AI-SBOM / structure | Inspect structural and supply-chain risk | Static findings |
-| **Behavior Testing** | Running target | Validate expected behavior and boundaries | Behavioral findings |
-| **Red Teaming** | Running target + scenario catalog | Launch adversarial test campaigns | Attack findings and risk score |
-| **Correlation** | Findings from all stages | Combine evidence into a unified risk view | Prioritized security issues |
-| **Remediation** | Correlated findings | Produce component-specific guidance | Fix recommendations |
-| **Export** | Assessment results | Render reports for people and automation | Text / JSON / Markdown / SARIF |
+Stage
 
----
+Primary input
 
-## 🛡️ Security Capabilities
+Processing
 
-### AI-SBOM & Attack-Surface Visibility
+Primary output
 
-Instead of treating an AI application as one opaque chatbot, the project models the components that participate in decisions and actions. This creates the visibility required to reason about risk across the entire AI workflow.
+AI-SBOM
 
-### Cognitive Policy Validation
+Application source
 
-Security is evaluated against the application's intended behavior. This allows the system to distinguish between normal functionality and behavior that crosses a defined security boundary.
+Discover AI components and relationships
 
-### Static AI Security Analysis
+Structured AI inventory
 
-Static analysis can produce useful findings even when the live application is unavailable. It focuses on structural and supply-chain risk derived from the application's AI components and relationships.
+Policy
 
-### Runtime Behavior Testing
+Intended application behavior
 
-Behavior testing checks whether a deployed or sandboxed application stays inside expected functional and topic boundaries when real requests are sent to it.
+Model allowed and prohibited actions
 
-### Automated Adversarial Testing
+Controls and enforcement gaps
 
-The red-team engine supports a large catalog of attack scenarios and can filter campaigns by category or profile instead of requiring every scenario to run every time.
+Static Analysis
 
-### Actionable Security Reporting
+AI-SBOM / application structure
 
-Reports can be produced for both engineers and automation workflows, including SARIF for security tooling and CI/CD integration.
+Inspect structural and supply-chain risk
 
----
+Static findings
 
-## ⚔️ Threat Coverage
+Behavior Testing
 
-| Threat | What the assessment asks |
-|---|---|
-| **Prompt Injection** | Can attacker-controlled language override trusted instructions? |
-| **Tool Abuse** | Can an agent be manipulated into unsafe or unauthorized tool execution? |
-| **Data Exfiltration** | Can sensitive information escape through responses, context, or tool outputs? |
-| **Policy Bypass** | Can the model cross explicitly defined behavioral restrictions? |
-| **Multi-Turn Manipulation** | Can an attacker gradually change model behavior across multiple interactions? |
-| **Unsafe Agent Actions** | Can model reasoning lead to an action that should not be performed? |
-| **Structural Risk** | Are risky components or relationships visible in the AI system design? |
-| **Supply-Chain Risk** | Do components used by the AI application introduce security concerns? |
-| **Control Gaps** | Does the intended policy lack sufficient technical enforcement? |
-| **Sensitive Data Exposure** | Can a user retrieve information outside their expected authorization boundary? |
+Running target
 
----
+Validate expected behavior and boundaries
 
-## 🏗️ High-Level Architecture
+Runtime behavior findings
 
-```mermaid
+Red Teaming
+
+Running target + scenario catalog
+
+Execute adversarial test campaigns
+
+Attack findings and risk score
+
+Correlation
+
+Findings from all stages
+
+Combine security evidence
+
+Prioritized risk view
+
+Remediation
+
+Correlated findings
+
+Generate component-focused guidance
+
+Recommended fixes
+
+Export
+
+Assessment results
+
+Render human and machine-readable output
+
+Text / JSON / Markdown / SARIF
+
+Architecture
+
 flowchart LR
     SRC[Application Source] --> DISC[AI Discovery]
     DISC --> SBOM[AI-SBOM]
+
     SBOM --> STATIC[Static Analyzer]
     SBOM --> POLICY[Cognitive Policy Engine]
 
     LIVE[Running AI Target] --> BEHAVIOR[Behavior Test Runner]
     LIVE --> REDTEAM[Red-Team Engine]
+
     POLICY --> BEHAVIOR
     POLICY --> REDTEAM
 
@@ -243,98 +320,112 @@ flowchart LR
     REDTEAM --> CORR
 
     CORR --> MAP[OWASP / MITRE Mapping]
-    MAP --> REM[Remediation Engine]
+    MAP --> REM[Remediation]
     REM --> REPORT[Reporting Layer]
 
+    REPORT --> TXT[Text]
     REPORT --> JSON[JSON]
     REPORT --> MD[Markdown]
     REPORT --> SARIF[SARIF]
-    REPORT --> TXT[Text]
-```
 
-### Architecture responsibilities
+Component Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| **Discovery Layer** | Detect AI components and relationships. |
-| **AI-SBOM Layer** | Represent the application attack surface in a structured form. |
-| **Policy Engine** | Describe intended behavior and identify enforcement gaps. |
-| **Static Analyzer** | Evaluate structural and supply-chain risk. |
-| **Behavior Runner** | Validate real runtime behavior against expected boundaries. |
-| **Red-Team Engine** | Execute adversarial scenarios against authorized targets. |
-| **Correlation Layer** | Merge evidence from multiple analysis stages. |
-| **Framework Mapping** | Organize findings using recognized AI-security categories. |
-| **Remediation Layer** | Convert findings into developer-focused fixes. |
-| **Reporting Layer** | Export results for people, security tools, and automation. |
+Component
 
----
+Responsibility
 
-## 📊 Real Assessment Example
+Discovery Layer
 
-The project documentation includes a real assessment of a live fintech agent, **Pinnacle Bank Assistant**, demonstrating the complete workflow instead of a mocked scan.
+Detect AI components and relationships.
 
-<div align="center">
+AI-SBOM Layer
 
-| Security stage | Documented result |
-|---|---:|
-| AI-SBOM discovery | **159 nodes** |
-| Cognitive policy | **19 controls** |
-| Policy enforcement gaps | **4** |
-| Static-analysis findings | **621** |
-| Behavior risk score | **59.8 / 100** |
-| Red-team risk score | **40.3 / 100** |
-| Red-team findings | **37** |
+Represent the application's AI attack surface in a structured form.
 
-</div>
+Policy Engine
 
-One demonstrated finding was a **cross-account data leak**, where the agent exposed another customer's flagged fraud transactions during a routine interaction.
+Describe intended behavior and identify enforcement gaps.
 
-> **Why this matters:** an AI application can appear functionally correct while still violating authorization, privacy, or data-isolation expectations at the behavioral layer.
+Static Analyzer
 
----
+Evaluate structural and supply-chain risk.
 
-## 💼 Where This Fits in a Real Security Program
+Behavior Runner
 
-### Before Production
+Validate runtime behavior against expected boundaries.
 
-Use the complete pipeline as a security gate before releasing an AI agent or LLM-enabled application.
+Red-Team Engine
 
-### During Development
+Execute adversarial scenarios against authorized targets.
 
-Re-run targeted tests when teams modify:
+Correlation Layer
 
-- System prompts
-- Agent instructions
-- Tool permissions
-- API integrations
-- Retrieval sources
-- LLM providers or models
-- Policy rules
-- Business workflows
+Merge evidence from multiple assessment stages.
 
-### AppSec / Product Security
+Framework Mapping
 
-Use AI-SBOM, static analysis, behavior testing, and red-team results as one assessment workflow for internal AI systems.
+Add standardized AI-security context to findings.
 
-### Red Team / AI Security Assessment
+Remediation Layer
 
-Run focused adversarial campaigns against authorized applications and use correlation to turn attack observations into prioritized findings.
+Translate findings into developer-focused guidance.
 
-### CI/CD
+Reporting Layer
 
-Use JSON or SARIF output to connect AI-security validation with automated engineering workflows.
+Export results for engineers, security teams, and automation.
 
-### Governance & Risk
+Security Coverage
 
-Use AI-SBOM and policy information to document what the system contains, what it is intended to do, and where control gaps exist.
+Security area
 
----
+Assessment question
 
-## ⚙️ Running With or Without a Live Target
+Prompt Injection
 
-### Static / Offline Mode
+Can attacker-controlled language override trusted instructions?
 
-```text
+Tool Abuse
+
+Can the agent be manipulated into unsafe or unauthorized tool execution?
+
+Data Exfiltration
+
+Can sensitive information escape through responses, context, retrieval, or tool output?
+
+Policy Bypass
+
+Can the model cross explicitly defined behavioral restrictions?
+
+Multi-Turn Manipulation
+
+Can an attacker gradually alter model behavior across multiple interactions?
+
+Unsafe Agent Actions
+
+Can model reasoning lead to an action that should not be performed?
+
+Structural Risk
+
+Are risky components or relationships present in the AI system design?
+
+Supply-Chain Risk
+
+Do AI application components introduce additional security concerns?
+
+Control Gaps
+
+Does intended policy lack sufficient technical enforcement?
+
+Sensitive Data Exposure
+
+Can users obtain information outside their expected authorization boundary?
+
+Operating Modes
+
+The platform supports security assessment with or without a running target, depending on the stage being executed.
+
+Static / Offline Assessment
+
 Application Source
       │
       ▼
@@ -348,13 +439,11 @@ Static Analysis
       │
       ▼
 Structural + Supply-Chain Findings
-```
 
-A live application is not required for AI-SBOM generation and static analysis.
+Use this mode when the application source is available but a live deployment is not required or not yet available.
 
-### Runtime / Live Mode
+Runtime / Live Assessment
 
-```text
 Authorized Running AI Application
               │
               ▼
@@ -364,61 +453,59 @@ Authorized Running AI Application
        Red-Team Campaign
               │
               ▼
-      Runtime Findings
-```
+       Runtime Findings
 
-Behavior and adversarial testing require a running target and should be performed only against systems you are authorized to test, preferably in a controlled or sandboxed environment.
+Behavior testing and red-team execution require a running target and should be performed only against applications you own or are explicitly authorized to test.
 
----
+Getting Started
 
-## 🚀 Getting Started
+1. Install
 
-### 1. Install
-
-```bash
 pip install nuguard
-```
 
-### 2. Initialize a target
+2. Initialize the Target
 
-```bash
 nuguard init --target <your-app-url>
-```
 
-### 3. Generate an AI-SBOM
+3. Generate an AI-SBOM
 
-```bash
 nuguard sbom generate \
   --source <path-to-your-app> \
   --output app.sbom.json
-```
 
-### 4. Run static analysis
+4. Run Static Analysis
 
-```bash
 nuguard analyze \
   --sbom app.sbom.json \
   --format markdown
-```
 
-### 5. Run an adversarial red-team campaign
+5. Run an Adversarial Campaign
 
-```bash
 nuguard redteam \
   --config nuguard.yaml \
   --format markdown \
   --output reports/redteam.md
-```
 
----
+Typical Assessment Sequence
 
-## 🤖 LLM Provider Configuration
+# Initialize the target
+nuguard init --target <your-app-url>
 
-LLM-assisted features are configured through the `llm` section of `nuguard.yaml`.
+# Build the AI application inventory
+nuguard sbom generate --source <path-to-your-app> --output app.sbom.json
 
-Provider credentials are supplied through environment variables, while **LiteLLM** is used as the abstraction layer for LLM providers.
+# Analyze structural risk
+nuguard analyze --sbom app.sbom.json --format markdown
 
-```text
+# Execute runtime adversarial testing
+nuguard redteam --config nuguard.yaml --format markdown --output reports/redteam.md
+
+Configuration
+
+LLM-assisted features are configured through the llm section of nuguard.yaml.
+
+Provider credentials are supplied through environment variables, while LiteLLM is used as the provider abstraction layer.
+
 nuguard.yaml
    │
    ├── target configuration
@@ -428,130 +515,232 @@ nuguard.yaml
            │
            ▼
    Environment credentials
-```
 
----
+This keeps assessment behavior in configuration while keeping provider secrets outside the repository.
 
-## 🎛️ Red-Team Scenario Control
+Red-Team Scenario Control
 
-A full red-team catalog does not need to run during every assessment.
+The complete adversarial catalog does not need to run during every assessment.
 
 Scenarios can be:
 
-- Filtered by **category**
-- Filtered by **profile**
-- Selectively disabled
-- Exported and customized
+Filtered by category
+
+Filtered by profile
+
+Selectively disabled
+
+Exported and customized
 
 Export the scenario catalog with:
 
-```bash
 nuguard redteam catalog-export
-```
 
-This makes it possible to create focused campaigns for different applications, risk levels, environments, or assessment objectives.
+This enables focused campaigns for different applications, environments, and assessment objectives.
 
----
+Reporting and Integration
 
-## 📄 Reporting & Outputs
+Assessment output is available in multiple formats so results can be consumed by both people and automated security workflows.
 
-| Format | Best use |
-|---|---|
-| **Text** | Fast terminal review and simple operational output |
-| **Markdown** | Human-readable security reports and GitHub documentation |
-| **JSON** | APIs, automation, pipelines, dashboards, and post-processing |
-| **SARIF** | Security tooling and CI/CD integration |
+Format
 
-The reporting stage is designed to move beyond raw attack transcripts and provide findings that can be used by engineering and security teams.
+Primary use
 
----
+Text
 
-## ⭐ STAR Interview Strategy
+Terminal review and lightweight operational output
 
-Use this section when explaining the project in a technical interview. Keep first-person claims limited to the parts you personally implemented, modified, integrated, or validated.
+Markdown
 
-### **S — Situation**
+Human-readable findings, technical reports, and repository documentation
 
-Modern AI agents can connect LLMs to tools, APIs, retrieval systems, and sensitive business data. Traditional security scanners can inspect source code, dependencies, or APIs, but they do not fully test whether an AI system can be manipulated through prompts, multi-turn conversations, unsafe tool usage, or model-driven decisions.
+JSON
 
-### **T — Task**
+APIs, dashboards, automation, pipelines, and post-processing
 
-The project needed a repeatable security workflow that could answer two important questions:
+SARIF
 
-1. **What AI components and structural risks exist inside the application?**
-2. **Can the running AI application be manipulated into unsafe behavior?**
+Security tooling and CI/CD integration
 
-### **A — Action**
+Result Flow
 
-The solution combines multiple security stages:
+Security Findings
+      │
+      ├── Human Review ───────► Markdown / Text
+      │
+      ├── Automation ─────────► JSON
+      │
+      └── Security Tooling ───► SARIF
 
-- Discover agents, models, tools, and APIs
-- Generate an AI-SBOM
-- Define and evaluate cognitive policy
-- Run static structural and supply-chain analysis
-- Map findings to AI-security frameworks
-- Execute behavior validation against a live target
-- Run 100+ adversarial scenarios
-- Test prompt injection, tool abuse, policy bypass, multi-turn attacks, and data exfiltration
-- Correlate findings across stages
-- Export remediation-oriented results as Markdown, JSON, SARIF, or text
+The reporting layer is intended to turn raw test evidence into findings that engineering and security teams can act on.
 
-### **R — Result**
+Production Security Workflow
 
-The result is a single workflow that evaluates both **how an AI application is built** and **how it behaves under attack**. In the documented fintech assessment, the pipeline identified a large AI component graph, policy gaps, hundreds of static findings, runtime red-team issues, and a cross-account data leak.
+A practical project sequence is:
 
-<details>
-<summary><strong>🎤 45-second interview answer</strong></summary>
+SOURCE / BUILD
+     │
+     ▼
+AI-SBOM + STATIC ANALYSIS
+     │
+     ▼
+POLICY VALIDATION
+     │
+     ▼
+AUTHORIZED TEST ENVIRONMENT
+     │
+     ▼
+BEHAVIOR + RED TEAM TESTING
+     │
+     ▼
+FINDING CORRELATION
+     │
+     ▼
+REMEDIATION
+     │
+     ▼
+REPORT / CI SECURITY OUTPUT
 
-<br>
+Where the workflow fits
 
-> “This project is an AI application security testing platform for LLM and agentic systems. The main security problem is that traditional scanners can inspect code and APIs, but they do not fully validate AI behavior. The workflow discovers the application's models, agents, tools, and API endpoints and generates an AI-SBOM. It then performs static risk analysis and evaluates the intended cognitive policy. For a live target, it runs behavioral tests and more than 100 adversarial scenarios covering prompt injection, tool abuse, policy bypass, multi-turn manipulation, and data exfiltration. Finally, it correlates findings and exports remediation-focused reports in formats such as Markdown, JSON, and SARIF. The key value is that it combines structural AI security visibility with runtime behavioral validation.”
+Stage
 
-</details>
+Usage
 
----
+Development
 
-## 📁 Repository Notes
+Re-run security checks when prompts, tools, APIs, models, retrieval sources, or policy rules change.
 
-- Example applications are available under `tests/apps/`.
-- LLM-assisted features require the relevant provider credentials through environment variables.
-- AI-SBOM and static-analysis workflows can run without a live target.
-- Behavior and red-team testing require a running application target.
+Pre-release validation
 
----
+Execute the complete assessment before exposing an AI application to production users.
 
-## 📚 Documentation
+Application security review
 
-| Guide | Purpose |
-|---|---|
-| [Getting Started](documentation/docs/getting-started.md) | Installation and first steps |
-| [Quick Start](documentation/docs/quick-start.md) | Fast path to running the project |
-| [CLI Reference](documentation/docs/cli-reference.md) | Command-line interface reference |
-| [Policy Engine Guide](documentation/docs/policy-engine-guide.md) | Cognitive-policy configuration and usage |
-| [Static Analysis Guide](documentation/docs/static-analysis-guide.md) | Static security-analysis workflow |
-| [Red-Team Guide](documentation/docs/redteam-guide.md) | Adversarial testing and scenario usage |
-| [Plugin Guide](documentation/docs/plugin-guide.md) | Plugin integration documentation |
-| [Troubleshooting](documentation/docs/troubleshooting.md) | Common setup and runtime issues |
-| [Security](.github/SECURITY.md) | Security policy and reporting guidance |
+Combine structural and runtime evidence in a single AI-focused review.
 
----
+Authorized red-team testing
 
-## 🔐 Responsible Use
+Run focused adversarial campaigns against controlled targets.
 
-This project is intended for **authorized AI security testing, defensive research, application validation, and security engineering**. Run behavior and red-team campaigns only against systems you own or have explicit permission to assess.
+CI/CD security workflows
 
----
+Consume JSON or SARIF results in automated engineering pipelines.
 
-## 📜 License
+Governance and risk review
 
-Distributed under the [Apache License 2.0](LICENSE).
+Use AI-SBOM and policy output to document system components and control gaps.
 
----
+Assessment Example
+
+The project documentation includes a scan of a live fintech agent, Pinnacle Bank Assistant, demonstrating the complete five-stage workflow with real findings rather than mocked results.
+
+<div align="center">
+
+Security stage
+
+Documented result
+
+AI-SBOM discovery
+
+159 nodes
+
+Cognitive policy
+
+19 controls
+
+Policy enforcement gaps
+
+4
+
+Static-analysis findings
+
+621
+
+Behavior risk score
+
+59.8 / 100
+
+Red-team risk score
+
+40.3 / 100
+
+Red-team findings
+
+37
+
+</div>
+
+One documented finding was a cross-account data leak, where the agent exposed another customer's flagged fraud transactions during a routine interaction.
+
+This demonstrates why AI application security cannot rely only on code-level validation: a system may appear functionally correct while still violating authorization, privacy, or data-isolation expectations at runtime.
+
+Repository Notes
+
+Example applications are available under tests/apps/.
+
+LLM-assisted features require the relevant provider credentials through environment variables.
+
+AI-SBOM generation and static analysis can run without a live target.
+
+Behavior and red-team testing require a running application target.
+
+Documentation
+
+Guide
+
+Purpose
+
+Getting Started
+
+Installation and first steps
+
+Quick Start
+
+Fast path to running the project
+
+CLI Reference
+
+Command-line interface reference
+
+Policy Engine Guide
+
+Cognitive-policy configuration and usage
+
+Static Analysis Guide
+
+Static security-analysis workflow
+
+Red-Team Guide
+
+Adversarial testing and scenario usage
+
+Plugin Guide
+
+Plugin integration documentation
+
+Troubleshooting
+
+Common setup and runtime issues
+
+Security
+
+Security policy and reporting guidance
+
+Responsible Use
+
+This project is intended for authorized AI security testing, defensive research, application validation, and security engineering.
+
+Behavior testing and red-team campaigns should only be executed against systems you own or have explicit permission to assess, preferably in controlled or sandboxed environments.
+
+License
+
+Distributed under the Apache License 2.0.
 
 <p align="center">
-  <strong>Build AI systems that are not only intelligent — but observable, testable, and defensible.</strong>
+  <strong>Discover the AI attack surface. Validate behavior. Test adversarially. Remediate with evidence.</strong>
 </p>
 
 <p align="center">
-  <sub>AI-SBOM • Policy • Static Analysis • Behavior Testing • Red Teaming • Remediation</sub>
+  <sub>AI-SBOM • Policy • Static Analysis • Behavior Testing • Red Teaming • Remediation • Reporting</sub>
 </p>
