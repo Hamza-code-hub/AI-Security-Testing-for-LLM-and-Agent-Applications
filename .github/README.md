@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hero-banner.png" alt="NuGuard — AI Security Testing for LLM and Agent Applications" width="100%" />
+  <img src="assets/hero-banner.png" alt="NuGuard — AI Security Testing for LLM and Agent Applications" width="100%" />
 </p>
 
 <h1 align="center">AI Security Testing for LLM & Agent Applications</h1>
@@ -60,7 +60,7 @@ This project provides an end-to-end security workflow that combines **structural
 ## 🖼️ Project at a Glance
 
 <p align="center">
-  <img src="docs/assets/project-overview-infographic.png" alt="NuGuard project overview infographic" width="78%" />
+  <img src="docs/project-overview-infographic.png" alt="NuGuard project overview infographic" width="78%" />
 </p>
 
 The visual above summarizes the complete product story: discover the AI application, analyze its structure, validate policy and behavior, launch adversarial tests, identify data leakage or control failures, remediate the affected component, and export results for engineering or security workflows.
@@ -98,7 +98,7 @@ That gives teams visibility into both:
 ## 🔄 End-to-End Security Workflow
 
 <p align="center">
-  <img src="docs/assets/project-workflow.svg" alt="End-to-end AI security testing workflow" width="100%" />
+  <img src="docs/project-workflow.svg" alt="End-to-end AI security testing workflow" width="100%" />
 </p>
 
 ### Stage 01 — Target Initialization
@@ -163,7 +163,7 @@ Generate human-readable and machine-readable results that can be used by develop
 ## 🧪 Security Testing Workflow
 
 <p align="center">
-  <img src="docs/assets/security-testing-workflow.svg" alt="AI security testing stages" width="92%" />
+  <img src="docs/security-testing-workflow.svg" alt="AI security testing stages" width="92%" />
 </p>
 
 | Phase | Input | What happens | Output |
