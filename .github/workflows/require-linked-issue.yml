@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Check for a linked issue
         id: check
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             // GitHub only populates closingIssuesReferences (below) when the PR targets the
