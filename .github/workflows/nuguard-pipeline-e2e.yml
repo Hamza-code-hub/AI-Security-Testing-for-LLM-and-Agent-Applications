@@ -58,7 +58,7 @@ jobs:
 
       - name: Upload reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nuguard-e2e-${{ github.base_ref }}-${{ matrix.app }}
           path: ${{ matrix.report_dir }}/**
